@@ -1,0 +1,103 @@
+
+    <!-- Start Page Title Area -->
+    <div class="main-banner">
+        <div class="d-table">
+            <div class="d-table-cell">
+                <div class="container-fluid">
+                    <div class="main-banner-content">
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Page Title Area -->
+   <!--Start Page Register Form-->
+    <body>   
+
+        
+    
+     
+    <div class="container">
+        <div class="d-flex justify-content-center h-100">
+            <div class="card" >
+                <div class="card-header">
+                    <h3>S'inscrire</h3>
+                    <div class="d-flex justify-content-end social_icon">
+                        <span><i class="fab fa-facebook-square"></i></span>
+                        <span><i class="fab fa-google-plus-square"></i></span>
+                        <span><i class="fab fa-twitter-square"></i></span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" >
+                        <div class="input-group form-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                            </div>
+                            <input type="text" formControlName="username" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.username.errors }"  placeholder="username">
+                            <div *ngIf="submitted && f.username.errors" class="invalid-feedback">
+                                <div *ngIf="f.username.errors.required">Username is required</div>
+                            </div>
+                        </div>
+                        <div class="input-group form-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                            </div>
+                            <input type="text"  placeholder="email"  formControlName="email" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.email.errors }"  placeholder="email">
+                            <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
+                                <div *ngIf="f.email.errors.required">Email is required</div>
+                            </div>
+                        </div>
+                        
+                        <div class="input-group form-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-key"></i></span>
+                            </div>
+                            <input type="password"  placeholder="mot de passe"formControlName="password1" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.password1.errors }" />
+                            <div *ngIf="submitted && f.password1.errors" class="invalid-feedback">
+                                <div *ngIf="f.password1.errors.required">Password is required</div>
+                                <div *ngIf="f.password1.errors.minlength">Password must be at least 6 characters</div>
+                            </div>
+                        </div>
+                        <div class="input-group form-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-key"></i></span>
+                            </div>
+                            <input type="password"  placeholder="Confirmer votre mot de passe" formControlName="password2" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.password2.errors }" />
+                            <div *ngIf="submitted && f.password2.errors" class="invalid-feedback">
+                                <div *ngIf="f.password2.errors.required">Password is required</div>
+                                <div *ngIf="f.password2.errors.minlength">Password must be at least 6 characters</div>
+                            </div>
+                        </div>
+                        
+                        
+                        <div class="row align-items-center remember1">
+                            <input type="checkbox">j'accepte les conditions spécifiques de mon compte dévelopeur
+                        </div>
+                        <div class="form-group">
+                            <button  class="btn float-right login_btn1">Register</button> 
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer">
+                    <div class="d-flex justify-content-center links">
+                        Vous avez un compte?<a [routerLink]="['/login']">S'identifier</a>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+       
+
+    
+
+
+
+
+
+    </body>
+   <!--End Page Register Form-->
+
+ 

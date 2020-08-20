@@ -2,9 +2,8 @@
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
   "newProjectRoot": "projects",
-
   "projects": {
-    "Angular-Project" : {
+    "Angular-Project": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -90,11 +89,11 @@
             ],
             "styles": [
               "./node_modules/bootstrap/dist/css/bootstrap.css",
-        "src/styles.css"
+              "src/styles.css"
             ],
             "scripts": [
               "./node_modules/jquery/dist/jquery.js",
-        "./node_modules/bootstrap/dist/js/bootstrap.js"
+              "./node_modules/bootstrap/dist/js/bootstrap.js"
             ]
           }
         },
@@ -123,9 +122,11 @@
             }
           }
         }
-      },
-      
+      }
     }
   },
-  "defaultProject": "Angular-Project"
+  "defaultProject": "Angular-Project",
+  "cli": {
+    "analytics": false
+  }
 }

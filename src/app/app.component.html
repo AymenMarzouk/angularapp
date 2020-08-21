@@ -46,64 +46,23 @@
                 </div>
             </div>
         </div>
-        <nav class="navbar navbar-expand navbar-dark bg-dark" *ngIf="currentUser">
-          <div class="navbar-nav">
-              <a class="nav-item nav-link" routerLink="/">Home</a>
+        <nav class="navbar navbar-expand navbar-dark bg-dark"  *ngIf="currentUser">
+          <div  class="navbar-nav ml-auto">
+              <a class="nav-item nav-link" routerLink="/home">Home</a>
               <a class="nav-item nav-link" (click)="logout()">Logout</a>
           </div>
       </nav>
-        <div class="evolta-nav">
-            <div class="container-fluid" id="2222">
-                <nav class="navbar navbar-expand-md navbar-light" >
-                    
-                    <a class="navbar-brand">
-                        <img src="assets/img/white-logo.png" class="main-logo" alt="logo">
-                        <img src="assets/img/black-logo.png" class="optional-logo" alt="logo">
-                       
-                    </a>
-                  
 
-
-
-                    <div class="collapse navbar-collapse mean-menu" id="navbarSupportedContent" >
-                        
-                        <ul class="navbar-nav" >
-                            <li class="nav-item" *ngFor="let navi of nav1; let i=index"><a id="eng" routerLink="{{navi.route}}"class="nav-link"> {{navi.lg}}</a>
-                                <ul class="dropdown-menu"  *ngIf="navi.liste.length>0">
-                                    <li class="nav-item"  *ngFor="let naviga of navi.liste" ><a routerLink="{{naviga.route}}" class="nav-link">{{naviga.id}}</a></li>
-                                    
-                                </ul>
-    
-                            </li >
-                            
-                        
-                           
-        
-                        
-                             
-                        </ul>
-                        
-                       
-
-                        
-                          
-                       
-                       
-                        
-                        
-
-                      
-                    </div>
-                    <select class="form-control form-control-lg col-1" name="tiit"    id="kazdada" (change)="ff($event)">
-                        <option value="ln"  selected disabled >lang</option>
-                        <option value="EN" >EN</option>
-                        <option value="FR" >FR</option>
-                    </select> 
-                
-                   
-                </nav>
-            </div>
+      <nav class="navbar navbar-expand navbar-dark bg-dark" *ngIf="!currentUser">
+        <div  class="navbar-nav ml-auto">
+            <a class="nav-item nav-link" routerLink="/register">Developer</a>
+            <a class="nav-item nav-link" routerLink="/register"> Entreprise </a>
+            <a class="nav-item nav-link" routerLink="/home"> Home </a>
+            <a class="nav-item nav-link" routerLink="/login">Login</a>
         </div>
+    </nav>
+
+ 
     </div>
     <!-- End Navbar Area -->
 

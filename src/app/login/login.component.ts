@@ -14,7 +14,7 @@ export class LoginComponent implements OnInit {
     loginForm: FormGroup;
     loading = false;
     submitted = false;
-    returnUrl: string;
+    //returnUrl: string;
 
     constructor(
         private formBuilder: FormBuilder,
@@ -24,20 +24,19 @@ export class LoginComponent implements OnInit {
         private alertService: AlertService
     ) {
         // redirect to home if already logged in
-        if (this.authenticationService.currentUserValue) { 
-            this.router.navigate(['/']);
+        if (this.authenticationService.currentUser) { 
+            this.router.navigate(['/profile']);
         }
     }
 
     ngOnInit() {
         this.loginForm = this.formBuilder.group({
-            username: ['', Validators.required],
             email: ['', Validators.required],
             password: ['', Validators.required]
         });
 
         // get return url from route parameters or default to '/'
-        this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+      ///  this.returnUrl = this.route.snapshot.queryParams['profil'] || '/';
     }
 
     // convenience getter for easy access to form fields
@@ -48,16 +47,20 @@ export class LoginComponent implements OnInit {
 
         // stop here if form is invalid
         if (this.loginForm.invalid) {
+           
             return;
         }
 
         this.loading = true;
-        this.authenticationService.login(this.f.username.value, this.f.email.value, this.f.password.value)
+        this.authenticationService.login( this.f.email.value, this.f.password.value)
             .pipe(first())
             .subscribe(
 
                 data => {
-                    this.router.navigate([this.returnUrl]);
+                    console.log(data);
+                    localStorage.setItem('currentUser', data.key);
+                    this.authenticationService.currentUser = true ;
+                    this.router.navigate(['/home']); 
                 },
                 error => {
                     this.alertService.error(error);

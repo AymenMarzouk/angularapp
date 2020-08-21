@@ -5,9 +5,12 @@ import { first } from 'rxjs/operators';
 import { User } from '../models';
 import { UserService, AuthenticationService } from '../services';
 
-@Component({ templateUrl: 'home.component.html' })
+@Component({ 
+    selector: 'app-home',
+    templateUrl: 'home.component.html' })
+
 export class HomeComponent implements OnInit, OnDestroy {
-    currentUser: User;
+    currentUser: boolean;
     currentUserSubscription: Subscription;
     users: User[] = [];
 
@@ -15,18 +18,18 @@ export class HomeComponent implements OnInit, OnDestroy {
         private authenticationService: AuthenticationService,
         private userService: UserService
     ) {
-        this.currentUserSubscription = this.authenticationService.currentUser.subscribe(user => {
-            this.currentUser = user;
-        });
+       // this.currentUserSubscription = this.authenticationService.currentUser.subscribe(user => {
+            this.currentUser = this.authenticationService.currentUser;
+      //  });
     }
 
     ngOnInit() {
-        this.loadAllUsers();
+        //this.loadAllUsers();
     }
 
     ngOnDestroy() {
         // unsubscribe to ensure no memory leaks
-        this.currentUserSubscription.unsubscribe();
+      //  this.currentUserSubscription.unsubscribe();
     }
 
     deleteUser(id: number) {

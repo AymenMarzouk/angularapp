@@ -8,24 +8,35 @@ import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { JwtInterceptor, ErrorInterceptor } from './helpers';
+import { CommonModule } from '@angular/common';  
 import { routing }        from './app-routing.module';
+import { RouterModule } from '@angular/router';
+import { ConfirmEmailComponent } from './confirm-email/confirm-email.component';
+import { RegisterEntrepriseComponent } from './register-entreprise/register-entreprise.component';
+
 @NgModule({
   imports: [
       BrowserModule,
       ReactiveFormsModule,
       HttpClientModule,
-      routing
+      CommonModule,
+      routing,
+      RouterModule
+    
   ],
   declarations: [
       AppComponent,
       AlertComponent,
       HomeComponent,
       LoginComponent,
-      RegisterComponent
+      RegisterComponent,
+      ConfirmEmailComponent,
+      RegisterEntrepriseComponent
+     
   ],
   providers: [
       { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
-      { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+     // { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
 
       // provider used to create fake backend
       //fakeBackendProvider

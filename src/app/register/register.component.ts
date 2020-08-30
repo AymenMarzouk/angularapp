@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { first } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { AlertService, UserService, AuthenticationService } from '../services';
-
+import { CookieService } from 'ngx-cookie-service';
+import { ConfirmedValidator } from '../confirmed.validator';
 @Component({
     selector: 'app-register',
     templateUrl: './register.component.html',
@@ -15,30 +16,54 @@ export class RegisterComponent implements OnInit {
     loading = false;
     submitted = false;
     HttpClient: any;
-
+    email : string; 
+    password : string ;
+    tokens= ['','{','}','[',']','.','"'] ;
     constructor(
         private http: HttpClient,
         private formBuilder: FormBuilder,
         private router: Router,
         private authenticationService: AuthenticationService,
         private userService: UserService,
-        private alertService: AlertService
+        private alertService: AlertService,
+        private cookieService: CookieService
     ) { 
-        // redirect to home if already logged in
-        if (this.authenticationService.currentUser) { 
-            this.router.navigate(['/']);
+        //redirect to home if already logged in
+        if (this.authenticationService.checkoutCurrentUser()) { 
+            this.router.navigate(['/home']);
         }
+      
     }
 
     ngOnInit() {
+        if(this.cookieService.get("remember") === 'true' ){
+            this.email =this.cookieService.get("email") ;
+            this.password = this.cookieService.get("password");
+            this.authenticationService.login( this.email, this.password).pipe(first())
+            .subscribe(
+    
+                data => {
+                    console.log(data);
+                   
+                    sessionStorage.setItem('currentUser', data.key);
+                    this.authenticationService.currentUserKey.next(localStorage.getItem('currentUser'));
+                    this.router.navigate(['/home']); 
+                })}
+
         this.registerForm = this.formBuilder.group({
-            email: ['', Validators.required/*, this.checkEmail.bind(this)*/],
-            username: ['', Validators.required],
-            password1: ['', [Validators.required, Validators.minLength(6)]],
-            password2: ['', [Validators.required, Validators.minLength(6)]]
-        });
+            email: ['', [Validators.required,Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$")]/*, this.checkEmail.bind(this)*/],
+            fullname: ['', Validators.required],
+            password1: ['', [Validators.required,Validators.pattern('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&].{8,}')]],
+            password2: ['',Validators.required],
+            acceptcheckbox: ['',Validators.requiredTrue]
+        }, { 
+            validator: ConfirmedValidator('password1', 'password2')
+          }) ;
+
+        
     }
 
+    
     // convenience getter for easy access to form fields
     get f() { return this.registerForm.controls; }
 
@@ -78,13 +103,26 @@ export class RegisterComponent implements OnInit {
         this.userService.register(this.registerForm.value)
             .pipe(first())
             .subscribe(
-                data => {
-                    this.alertService.success('Registration successful', true);
+                (data : any) => {
+                  
+                    this.alertService.success("A verification Email was sent to you to confirm your account, please check it !", true);
                     this.router.navigate(['/login']);
                 },
                 error => {
-                    this.alertService.error(error);
+                   
+                    this.alertService.error(this.splitMulti(JSON.stringify(error.error).substring(
+                        JSON.stringify(error.error).lastIndexOf("[") + 1, 
+                        JSON.stringify(error.error).lastIndexOf("]")
+                    ),this.tokens));
                     this.loading = false;
                 });
     }
+    splitMulti(str, tokens){
+        var tempChar = tokens[0]; // We can use the first token as a temporary join character
+        for(var i = 1; i < tokens.length; i++){
+            str = str.split(tokens[i]).join(tempChar);
+        }
+        //str = str.split(tempChar);
+        return str;
+}
 }

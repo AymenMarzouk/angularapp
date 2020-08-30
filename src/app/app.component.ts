@@ -1,27 +1,60 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { AuthenticationService } from './services';
+import { AuthenticationService, AlertService } from './services';
 import { User } from './models';
+import { Observable } from 'rxjs';
+import { CookieService } from 'ngx-cookie-service';
+import { AlertComponent } from './components/alert.component';
 
 @Component({ selector: 'app', templateUrl: 'app.component.html' })
-export class AppComponent {
-    public currentUser: boolean;
-
+export class AppComponent implements OnInit{
+  currentUser$: Observable<boolean>;
+  currentuserkey$ : Observable<string>;
     constructor(
+        private authenticationService: AuthenticationService,
         private router: Router,
-        private authenticationService: AuthenticationService
+        private cookieService: CookieService
+       
     ) {
-      
-      this.currentUser = this.authenticationService.currentUser ;
+     // this.currentUser = this.authenticationService.currentUser ;
+    
+   
     }
-    ngOnInit(){console.log("loading app")
+    
 
+    ngOnInit(){
+      console.log("loading app");
+      this.currentuserkey$ = this.authenticationService.currentuserkeyusername ;
+      this.currentUser$ = this.authenticationService.currentuserStatus ;
+      //this.alert.modifymessage(false) ;
+   /* $('#alert').mouseup(function(e) 
+    {
+      alertcomponent:AlertComponent ;
+      
+        var container = $("#alert");
+            container.hide();
+        this.currentUser$ 
+            
+        
+    });*/
+    /*
+    window.onbeforeunload = function (e) {
+      window.onunload = function () {
+              window.localStorage.isMySessionActive = "false";
+      }
+      return undefined;
+  };
+  window.onload = function () {
+            window.localStorage.isMySessionActive = "true";
+};
+*/
+  
     //$("#124536").hide();$("#124537").hide();
    // localStorage.setItem("nav",JSON.stringify(this.nav1)); 
   //localStorage.setItem("nav1",JSON.stringify(this.nav1));
   //localStorage.setItem("nav2",JSON.stringify(this.nav2));
-
+/*
   if(localStorage.getItem("lang")=="EN")
   {
   this.nav=this.nav2
@@ -32,13 +65,17 @@ export class AppComponent {
     this.nav=this.nav1;
     console.log("français")
   }
+
+  */
 }
-  lang=true;
-  title = 'K.A.Z';
-  id=2;
+
+
+  //lang=true;
+ // title = 'K.A.Z';
+  //id=2;
   //lng="EN";
-  lng1="FR";
-  nav=[{lg:"",route:"",liste:[{id:"",route:""}]}];gg
+ // lng1="FR";
+ // nav=[{lg:"",route:"",liste:[{id:"",route:""}]}];gg
 
 
 /*
@@ -92,6 +129,7 @@ export class AppComponent {
   }
  
 */
+/*
 v(){console.log("clikkk")}
 
 
@@ -107,10 +145,11 @@ v(){console.log("clikkk")}
    { this.nav=this.nav2;this.router.navigate(['/home'])}
 
     
-}
+}*/
 logout() {
     this.authenticationService.logout();
-    this.authenticationService.currentUser = false ;
+    this.cookieService.deleteAll() ;
+  //  this.authenticationService.currentUser = false ;
     this.router.navigate(['/login']);
 }
 }

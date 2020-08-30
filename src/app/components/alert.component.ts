@@ -21,7 +21,12 @@ export class AlertComponent implements OnInit, OnDestroy {
         });
     }
 
+  
     ngOnDestroy() {
         this.subscription.unsubscribe();
+    }
+
+    hidethenav(){
+        this.message=false ;
     }
 }

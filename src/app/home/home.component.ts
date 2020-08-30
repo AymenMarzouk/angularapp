@@ -19,12 +19,13 @@ export class HomeComponent implements OnInit, OnDestroy {
         private userService: UserService
     ) {
        // this.currentUserSubscription = this.authenticationService.currentUser.subscribe(user => {
-            this.currentUser = this.authenticationService.currentUser;
+            
       //  });
     }
 
     ngOnInit() {
         //this.loadAllUsers();
+      //  this.currentUser = this.authenticationService.currentUser;
     }
 
     ngOnDestroy() {

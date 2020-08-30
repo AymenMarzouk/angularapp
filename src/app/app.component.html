@@ -9,6 +9,7 @@
         </div>
     </div>
     !-- End Preloader -->
+    <body id="body">
        <!-- Start Navbar Area -->
        <div class="navbar-area" >
         <div class="evolta-responsive-nav">
@@ -30,11 +31,12 @@
                         
                          
                      </div>
+                     <!--
                      <select name="tiit" class="form-control  form-control-lg col-3"   id="kazdata1" (change)="fff($event)" >
                         <option value="ln" selected disabled >lang</option>
                         <option value="EN"  >EN</option>
                         <option value="FR" >FR</option>
-                    </select> 
+                    </select> -->
                     <div id="1245">
 
                     </div>
@@ -46,17 +48,30 @@
                 </div>
             </div>
         </div>
-        <nav class="navbar navbar-expand navbar-dark bg-dark"  *ngIf="currentUser">
-          <div  class="navbar-nav ml-auto">
+       
+        <nav class="navbar navbar-expand navbar-dark bg-dark"  *ngIf="(currentUser$ |async) as loginstatus" >
+          <div *ngIf="loginstatus" class="navbar-nav ml-auto">
               <a class="nav-item nav-link" routerLink="/home">Home</a>
-              <a class="nav-item nav-link" (click)="logout()">Logout</a>
+              <a class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-4" data-toggle="dropdown"
+                  aria-haspopup="true" aria-expanded="false" *ngIf="(currentuserkey$|async) as username">
+                  <i class="fas fa-user"></i> {{username}} </a>
+                <div class="btn btn-secondary dropdown-menu dropdown-menu-right dropdown-info" aria-labelledby="navbarDropdownMenuLink-4" aria-haspopup="true" aria-expanded="false">
+                  <a class="dropdown-item " href="#"><i class="fas fa-id-card" style="padding: 15px;"></i> My account</a>
+                  <a class="dropdown-item" href="#"><i class="fas fa-file-alt" style="padding: 15px;"></i>My Tests</a>
+                  <a class="dropdown-item" href="#"><i class="fas fa-graduation-cap" style="padding: 15px;"></i>My Courses</a>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item" (click)="logout()" style="color:black"> <i class="fas fa-power-off" style="padding: 15px;"></i> Log out</a>
+                </div>
+            </a>
           </div>
       </nav>
 
-      <nav class="navbar navbar-expand navbar-dark bg-dark" *ngIf="!currentUser">
-        <div  class="navbar-nav ml-auto">
+      <nav class="navbar navbar-expand navbar-dark bg-dark" 
+      *ngIf="!(currentUser$ |async) as loginstatus">
+        <div  *ngIf="loginstatus" class="navbar-nav ml-auto">
             <a class="nav-item nav-link" routerLink="/register">Developer</a>
-            <a class="nav-item nav-link" routerLink="/register"> Entreprise </a>
+            <a class="nav-item nav-link" routerLink="/registerentreprise"> Entreprise </a>
             <a class="nav-item nav-link" routerLink="/home"> Home </a>
             <a class="nav-item nav-link" routerLink="/login">Login</a>
         </div>
@@ -65,8 +80,10 @@
  
     </div>
     <!-- End Navbar Area -->
-
-  <app-alert></app-alert>
+   
+ 
+        
+  <app-alert id="alert"></app-alert>
 <router-outlet></router-outlet>
 
         <!-- Start Footer Area -->
@@ -162,3 +179,4 @@
         
        
   
+    </body>

@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { first } from 'rxjs/operators';
-
+import { first, map, catchError } from 'rxjs/operators';
 import { AlertService, AuthenticationService } from '../services';
-
+import { CookieService } from 'ngx-cookie-service';
+import { throwError, Observable, observable } from 'rxjs';
+import { HttpErrorResponse, HttpClient, JsonpClientBackend } from '@angular/common/http';
+import { JsonPipe } from '@angular/common';
 @Component({
     selector: 'app-login',
     templateUrl: './login.component.html',
@@ -14,6 +16,10 @@ export class LoginComponent implements OnInit {
     loginForm: FormGroup;
     loading = false;
     submitted = false;
+    rememberme : boolean ;
+    email : string; 
+    password : string ;
+     tokens= ['','{','}','[',']','.','"'] ;
     //returnUrl: string;
 
     constructor(
@@ -21,18 +27,40 @@ export class LoginComponent implements OnInit {
         private route: ActivatedRoute,
         private router: Router,
         private authenticationService: AuthenticationService,
-        private alertService: AlertService
+        private alertService: AlertService,
+        private cookieService: CookieService,
+        private _http:HttpClient
+        
     ) {
+this.email = "";
+this.password = "";
+        
         // redirect to home if already logged in
-        if (this.authenticationService.currentUser) { 
-            this.router.navigate(['/profile']);
+        if (this.authenticationService.checkoutCurrentUser()) { 
+            this.router.navigate(['/home']);
         }
     }
-
+    
     ngOnInit() {
+      //  this.authenticationService.currentUser = false ;
+      if(this.cookieService.get("remember") === 'true' ){
+        this.email =this.cookieService.get("email") ;
+        this.password = this.cookieService.get("password");
+        this.authenticationService.login( this.email, this.password).pipe(first())
+        .subscribe(
+
+            data => {
+                console.log(data);
+               
+                sessionStorage.setItem('currentUser', data.key);
+                this.authenticationService.currentUserKey.next(sessionStorage.getItem('currentUser'));
+                this.router.navigate(['/home']); 
+            });
+    }
         this.loginForm = this.formBuilder.group({
-            email: ['', Validators.required],
-            password: ['', Validators.required]
+            email: ['', [Validators.required,Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$")]],
+            password: ['', Validators.required],
+            remember : ['']
         });
 
         // get return url from route parameters or default to '/'
@@ -42,12 +70,15 @@ export class LoginComponent implements OnInit {
     // convenience getter for easy access to form fields
     get f() { return this.loginForm.controls; }
 
+    private handleError(errorResponse : HttpErrorResponse){
+        console.error(errorResponse) ;
+        return new Observable<HttpErrorResponse>() ;
+    }
     onSubmit() {
         this.submitted = true;
 
         // stop here if form is invalid
         if (this.loginForm.invalid) {
-           
             return;
         }
 
@@ -56,15 +87,32 @@ export class LoginComponent implements OnInit {
             .pipe(first())
             .subscribe(
 
-                data => {
-                    console.log(data);
-                    localStorage.setItem('currentUser', data.key);
-                    this.authenticationService.currentUser = true ;
+                (data: any) => {
+                    if(this.f.remember.value === true){
+                    this.cookieService.set( 'email', this.f.email.value,10 );
+                    this.cookieService.set( 'password', this.f.password.value,10 );
+                    this.cookieService.set( 'remember', this.f.remember.value,10 );
+                    }
+                  
+                    sessionStorage.setItem('currentUser', JSON.parse(data).key);
+                    this.authenticationService.currentUserKey.next(sessionStorage.getItem('currentUser'));
                     this.router.navigate(['/home']); 
                 },
-                error => {
-                    this.alertService.error(error);
+                error  => {
+                    this.alertService.error(this.splitMulti(JSON.stringify(error.error).substring(
+                        JSON.stringify(error.error).lastIndexOf("[") + 1, 
+                        JSON.stringify(error.error).lastIndexOf("]")
+                    ),this.tokens));
                     this.loading = false;
                 });
     }
+
+    splitMulti(str, tokens){
+        var tempChar = tokens[0]; // We can use the first token as a temporary join character
+        for(var i = 1; i < tokens.length; i++){
+            str = str.split(tokens[i]).join(tempChar);
+        }
+        //str = str.split(tempChar);
+        return str;
+}
 }

@@ -16,6 +16,10 @@ export class UserService {
     }
 
     register(user: User) {
+        return this.http.post(`${this.apiUrl}/api/v1/auth/freelance-registration/`, user);
+    }
+
+    registerEntreprise(user: User) {
         return this.http.post(`${this.apiUrl}/api/v1/auth/registration/`, user);
     }
 

@@ -6,7 +6,7 @@ import { User } from '../models';
 @Injectable({ providedIn: 'root' })
 export class UserService {
     constructor(private http: HttpClient) { }
-    apiUrl ='http://127.0.0.1:8000';
+    apiUrl ='http://127.0.0.1';
     getAll() {
         return this.http.get<User[]>(`${this.apiUrl}/users`);
     }

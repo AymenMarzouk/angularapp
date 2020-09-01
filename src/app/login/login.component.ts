@@ -93,7 +93,7 @@ this.password = "";
                     this.cookieService.set( 'password', this.f.password.value,10 );
                     this.cookieService.set( 'remember', this.f.remember.value,10 );
                     }
-                  
+                    this.authenticationService.currentUser.next(true) ;
                     sessionStorage.setItem('currentUser', JSON.parse(data).key);
                     this.authenticationService.currentUserKey.next(sessionStorage.getItem('currentUser'));
                     this.router.navigate(['/home']); 
@@ -103,6 +103,7 @@ this.password = "";
                         JSON.stringify(error.error).lastIndexOf("[") + 1, 
                         JSON.stringify(error.error).lastIndexOf("]")
                     ),this.tokens));
+                    this.authenticationService.currentUser.next(false) ;
                     this.loading = false;
                 });
     }

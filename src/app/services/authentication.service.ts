@@ -6,7 +6,7 @@ export class AuthenticationService {
     //private currentUserSubject: BehaviorSubject<User>;
     public currentUserKey = new BehaviorSubject <string> (sessionStorage.getItem('currentUser')) ;
     public currentUser = new BehaviorSubject <boolean> (this.checkoutCurrentUser()) ;
-    apiUrl = 'http://127.0.0.1:8000';
+    apiUrl = 'http://127.0.0.1:80';
     
     constructor(private http: HttpClient) {
        // this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('currentUser')));
@@ -26,9 +26,8 @@ export class AuthenticationService {
 
     login(email: string, password: string) {
         const headers = new HttpHeaders().set('Content-Type', 'application/json');
-        this.currentUser.next(true) ;
+       
         return this.http.post<any>(`${this.apiUrl}/api/v1/auth/login/`, { email, password },{ headers, responseType: 'text' as 'json'}) ;
-           
     }
     get currentuserStatus(){
         return this.currentUser.asObservable() ;

@@ -5,7 +5,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 export class AuthenticationService {
     //private currentUserSubject: BehaviorSubject<User>;
     public currentUserKey = new BehaviorSubject <string> (sessionStorage.getItem('currentUser')) ;
-    private currentUser = new BehaviorSubject <boolean> (this.checkoutCurrentUser()) ;
+    public currentUser = new BehaviorSubject <boolean> (this.checkoutCurrentUser()) ;
     apiUrl = 'http://127.0.0.1:8000';
     
     constructor(private http: HttpClient) {

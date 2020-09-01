@@ -50,10 +50,10 @@ this.password = "";
         .subscribe(
 
             data => {
-                console.log(data);
+                
                
-                sessionStorage.setItem('currentUser', data.key);
-                this.authenticationService.currentUserKey.next(sessionStorage.getItem('currentUser'));
+                sessionStorage.setItem('currentUser', JSON.parse(data).key);
+                    this.authenticationService.currentUserKey.next(sessionStorage.getItem('currentUser'));
                 this.router.navigate(['/home']); 
             });
     }

@@ -4,6 +4,8 @@ import { first } from 'rxjs/operators';
 
 import { User } from '../models';
 import { UserService, AuthenticationService } from '../services';
+import { CookieService } from 'ngx-cookie-service';
+import { Router } from '@angular/router';
 
 @Component({ 
     selector: 'app-home',
@@ -13,10 +15,13 @@ export class HomeComponent implements OnInit, OnDestroy {
     currentUser: boolean;
     currentUserSubscription: Subscription;
     users: User[] = [];
-
+    email : string; 
+    password : string ;
     constructor(
         private authenticationService: AuthenticationService,
-        private userService: UserService
+        private userService: UserService,
+        private cookieService: CookieService,
+        private router: Router
     ) {
        // this.currentUserSubscription = this.authenticationService.currentUser.subscribe(user => {
             
@@ -26,11 +31,12 @@ export class HomeComponent implements OnInit, OnDestroy {
     ngOnInit() {
         //this.loadAllUsers();
       //  this.currentUser = this.authenticationService.currentUser;
+     
     }
 
     ngOnDestroy() {
         // unsubscribe to ensure no memory leaks
-      //  this.currentUserSubscription.unsubscribe();
+      // this.currentUserSubscription.unsubscribe();
     }
 
     deleteUser(id: number) {

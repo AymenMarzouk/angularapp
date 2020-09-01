@@ -45,7 +45,7 @@ export class RegisterComponent implements OnInit {
                 data => {
                     console.log(data);
                    
-                    sessionStorage.setItem('currentUser', data.key);
+                    sessionStorage.setItem('currentUser', JSON.parse(data).key);
                     this.authenticationService.currentUserKey.next(localStorage.getItem('currentUser'));
                     this.router.navigate(['/home']); 
                 })}
